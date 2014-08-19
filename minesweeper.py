@@ -9,7 +9,11 @@ for x in range(0,i):
     field.append([0]*j)
     
 from random import randint
-num1=(i*j)/7
+
+if i*j<=6:
+    num1=2
+else:
+    num1=(i*j)/5
 
 list1=[]
 for x in range(0,num1):
@@ -153,55 +157,27 @@ for x in range(0,i):
     for y in range(0,j):
         field2[x][y]='_'
 
-print "The field has been created\n\n"
+print "The field has been created\n"
 
-print "\n"
 print_field(field2)
 
-print "Enter the place index which you want to open"
 
-def method(option,new):
-        print "Enter the row no. and column name"
-        p=int(raw_input())
-        q=raw_input()
-        p=p-1
-        if 97<=ord(q)<=122:
-            q=ord(q)-97
-        else:
-            q=ord(q)-65
-        field2[p][q]='F'
-        count=0
-        for p in range(0,i):
-            for q in range(0,j):
-                if field2[p][q]=='F':
-                    count+=1
-        return new-count
+temp=num
 
 def flag():
-    global num
-    temp=num
-    choice=raw_input("Do you want to put a flag (y/n)? : ")
-    if choice=='y' or choice=='yes' or choice=='Y' or choice=='Yes':
-        total=method(choice,temp)
-        print "Number of mines left = {}\n".format(total)
-        print_field(field2)
-        temp=total
-        for many in range(0,i*j):
-            choice=raw_input("Do you want to put another flag(y/n)? : ")
-            if choice=='y' or choice=='yes' or choice=='Y' or choice=='Yes':
-                total2=method(choice,total)
-                print "Number of mines left = {}\n".format(total2)
-                print_field(field2)
-                total=total2
-            elif choice=='n' or choice=='N' or choice=='No' or choice=='no':
-                print "Number of mines left = {}".format(total)
-                print "\n"
-                break
-            else:
-                print "Invalid input!"
-    elif choice=='n' or choice=='N' or choice=='No' or choice=='no':
-        print "Number of mines left = {}".format(temp)
-        print "\n"
+    p=int(raw_input("Enter the row no. : "))
+    q=(raw_input("Enter the column name : ")).upper()
+    p=p-1
+    q=ord(q)-65
+    field2[p][q]='F'
+    countm=0
+    for x in range(i):
+        for y in range(j):
+            if field2[x][y]=='F':
+                countm+=1
+    print "Number of mines left = {}".format(temp-countm)
+    print "\n"
+    print_field(field2)    
 
 def win():
     field3=copy.deepcopy(field2)
@@ -342,39 +318,38 @@ def incorrect(g):
         incorrect(g)
 
 for E in range(0,i*j):
-    game=win()
+    game=win()#winning condition
     if game=='Win':
         print "You won the game"
         print_field(field)
         break
-    print "(open a box)"
-    u=int(raw_input("Row no. : "))
-    incorrect(u)
-    v=raw_input("Column name : ")
-    if 97<=ord(v)<=122:
-        v=ord(v)-96
-    else:
+    choose=(raw_input("Do you want to open a box or put a flag(o/f)? : ")).upper()
+    if choose=='O' or choose=='OPEN':
+        u=int(raw_input("Row no. : "))
+        incorrect(u)
+        v=(raw_input("Column name : ")).upper()
         v=ord(v)-64
-    incorrect(v)
-    print "\n"
-    e=u-1
-    f=v-1
-    if(field[e][f]=='*'):
-        print "You lost the game\n"
-        field[e][f]='X'
-        print_field(field)
-        break
-    elif(field[e][f]!='*'):
-        field2[e][f]=field[e][f]
-        plus1_condition1(e,f)
-        for one in range(0,i*j):
-            foo()
-        game=win()
-        if game=='Win':
-            print "You won the game"
+        incorrect(v)
+        print "\n"
+        e=u-1
+        f=v-1
+        if(field[e][f]=='*'):
+            print "You lost the game\n"
+            field[e][f]='X'
             print_field(field)
             break
+        elif(field[e][f]!='*'):
+            field2[e][f]=field[e][f]
+            plus1_condition1(e,f)
+            for one in range(0,i*j):
+                foo()
+            game=win()
+            if game=='Win':
+                print "You won the game"
+                print_field(field)
+                break
         print_field(field2)
+    elif choose=='F' or choose=='FLAG':
         flag()
         game=win()
         if game=='Win':
